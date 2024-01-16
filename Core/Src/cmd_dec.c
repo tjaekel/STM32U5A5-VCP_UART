@@ -858,7 +858,7 @@ ECMD_DEC_Status CMD_cid(TCMD_DEC_Results *res, EResultOut out)
 {
 	unsigned long cid;
 
-	cid = QSPI_ReadChipID();
+	cid = QSPI_ReadChipID(out);
 	print_log(out, "0x%08lx\r\n", (unsigned long int)cid);
 
 	return CMD_DEC_OK;

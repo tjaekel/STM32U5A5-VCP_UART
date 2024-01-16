@@ -51,9 +51,9 @@ void HAL_MspInit(void)
 * @param hadc: ADC handle pointer
 * @retval None
 */
+#ifdef NUCLEO_BOARD		//YYYY
 void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
 {
-#ifdef YYYY
   GPIO_InitTypeDef GPIO_InitStruct = {0};
   RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
   if(hadc->Instance==ADC1)
@@ -79,8 +79,8 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
   }
-#endif
 }
+#endif
 
 /**
 * @brief ADC MSP De-Initialization
@@ -228,11 +228,23 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     __HAL_RCC_GPIOA_CLK_ENABLE();
     /**USART1 GPIO Configuration
     PA9     ------> USART1_TX
-    PA10     ------> USART1_RX
+    PA10    ------> USART1_RX
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_9|GPIO_PIN_10;
+    GPIO_InitStruct.Pin = GPIO_PIN_10;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;			//necessary: otherwise all hangs if UART1 Rx is floating!
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+    //XXXX
+    GPIO_InitStruct.Pin = GPIO_PIN_9;
+#ifdef NUCLEO_BOARD
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;		//Tx has a level shifter
+#else
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;		//for CP2102N with pull-up to VDD 3V3 on it
+#endif
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF7_USART1;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);

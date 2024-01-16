@@ -77,8 +77,14 @@ void MX_USB_OTG_HS_PCD_Init(void);
 #define CMD_LINE_LEN		(6*1024)			/* length of UART command line (ASCII based) */
 
 /* USER CODE BEGIN Private defines */
-#define VERSION_INFO		"V1.2"
+#define VERSION_INFO		"V2.0"
 #define VERSION_STRING		"---- QSPI MCU - " VERSION_INFO " ----\r\n"
+#ifdef NUCLEO_BOARD
+#define BOARD_INFO			"NUCLEO"
+#else
+#define	BOARD_INFO			"QSPI_MCU"
+#endif
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

@@ -14,7 +14,7 @@ const tCFGparams defaultCFGparams = {
 
 		/* QSPI defaults */
 		.QSPIdiv		= 16,			// 1: QSPI divider
-		.QSPImode		= 0,			// 2: QSPI peripheral: PHA and POL, SPI mode 0..3
+		.QSPImode		= 3,			// 2: QSPI peripheral: PHA and POL, SPI mode 0..3
 		.QSPIaddr		= 4,			// 3: QSPI peripheral: number ADDR bytes
 		.QSPIalt		= 3,			// 4: QSPI peripheral: number ALL bytes
 		.QSPIturn		= 2,			// 5: QSPI peripheral: clocks for turnaround
@@ -96,4 +96,5 @@ void SYSINFO_print(EResultOut out)
 	print_log(out, (const char *)"CPU ID     : %08lx\r\n", (long)SCB->CPUID);
 	print_log(out, (const char *)"REV ID     : %08lx\r\n", *((long *)DBGMCU_BASE));
 	print_log(out, (const char *)"CPU Clock  : %ld\r\n", SystemCoreClock);
+	print_log(out, (const char *)"Board      : %s\r\n", BOARD_INFO);
 }

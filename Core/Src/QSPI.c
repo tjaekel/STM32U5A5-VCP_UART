@@ -112,7 +112,14 @@ uint8_t OSPI_WriteReadTransaction(OSPI_HandleTypeDef *hospi, unsigned long *para
 
 uint8_t QSPI_Transaction(unsigned long *params, unsigned long numParams, unsigned long rdWords)
 {
-	return OSPI_WriteReadTransaction(&hospi1, params, numParams, rdWords);
+	uint8_t e;
+	if (gCFGparams.CfgFlags & 0x1)
+		QSPI_ActivatePins();
+	e = OSPI_WriteReadTransaction(&hospi1, params, numParams, rdWords);
+	if (gCFGparams.CfgFlags & 0x1)
+		QSPI_ReleasePins();
+
+	return e;
 }
 
 unsigned long QSPI_SetClock(unsigned long div)
@@ -134,7 +141,7 @@ unsigned long QSPI_SetClock(unsigned long div)
 	return div;
 }
 
-unsigned long QSPI_ReadChipID(void)
+unsigned long QSPI_ReadChipID(EResultOut out)
 {
 	unsigned long *params;
 	unsigned long cid;
@@ -161,6 +168,14 @@ unsigned long QSPI_ReadChipID(void)
 
 	QSPI_Transaction(params, 0, 5);
 
+	if (gCFGparams.Debug & DBG_VERBOSE)
+	{
+		int i;
+		for (i = 0; i < 5; i++)
+			print_log(out, " %08lx", params[i]);
+		Generic_Send((uint8_t *)"\r\n", 2, out);
+	}
+
 	cid = params[3];
 
 	MEM_PoolFree(params);
@@ -170,6 +185,62 @@ unsigned long QSPI_ReadChipID(void)
 
 void QSPI_DeInit(void)
 {
-	/* unitialize all QSPI signals */
+	/* un-initialize all QSPI signals */
 	HAL_OSPI_DeInit(&hospi1);
+}
+
+void QSPI_ReleasePins(void)
+{
+    /**OCTOSPI1 GPIO Configuration
+    PA2     ------> OCTOSPIM_P1_NCS
+    PB0     ------> OCTOSPIM_P1_IO1
+    PE12     ------> OCTOSPIM_P1_IO0
+    PE14     ------> OCTOSPIM_P1_IO2
+    PE15     ------> OCTOSPIM_P1_IO3
+    PB10     ------> OCTOSPIM_P1_CLK
+    */
+#if 0
+    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_2);
+#endif
+
+    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_0|GPIO_PIN_10);
+
+    HAL_GPIO_DeInit(GPIOE, GPIO_PIN_12|GPIO_PIN_14|GPIO_PIN_15);
+}
+
+void QSPI_ActivatePins(void)
+{
+	GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+    /**OCTOSPI1 GPIO Configuration
+    PA2     ------> OCTOSPIM_P1_NCS
+    PB0     ------> OCTOSPIM_P1_IO1
+    PE12     ------> OCTOSPIM_P1_IO0
+    PE14     ------> OCTOSPIM_P1_IO2
+    PE15     ------> OCTOSPIM_P1_IO3
+    PB10     ------> OCTOSPIM_P1_CLK
+    PA1      ------> OCTOSPIM_P1_DQS - not working in SDR mode
+    */
+#if 0
+    GPIO_InitStruct.Pin = GPIO_PIN_2;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = gCFGparams.QSPIspeed;		//GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF10_OCTOSPI1;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+#endif
+
+    GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_10;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = gCFGparams.QSPIspeed;		//GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF10_OCTOSPI1;
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin = GPIO_PIN_12|GPIO_PIN_14|GPIO_PIN_15;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = gCFGparams.QSPIspeed;		//GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF10_OCTOSPI1;
+    HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 }

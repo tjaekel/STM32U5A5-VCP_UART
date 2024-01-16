@@ -74,7 +74,7 @@
 /** @defgroup STM32U5XX_NUCLEO_USBPD_PWR_Private_Functions USBPD PWR Private Functions
   * @{
   */
-#ifdef YYYY
+#ifdef NUCLEO_BOARD	//YYYY
 static void     MX_ADC1_Init(void);
 #endif
 /**
@@ -156,7 +156,7 @@ int32_t BSP_USBPD_PWR_VBUSInit(uint32_t PortNum)
   }
   else
   {
-#ifdef YYYY
+#ifdef NUCLEO_BOARD	//YYYY
     /* Initialize VBUS sensing ADC */
     MX_ADC1_Init();
 
@@ -486,7 +486,7 @@ int32_t BSP_USBPD_PWR_VBUSGetVoltage(uint32_t PortNum, uint32_t *pVoltage)
   else
   {
     uint32_t val;
-#ifdef YYYY
+#ifdef NUCLEO_BOARD	//YYYY
     LL_ADC_REG_StartConversion(ADC1);
 
     val = __LL_ADC_CALC_DATA_TO_VOLTAGE(VSENSE_ADC_INSTANCE, VDDA_APPLI,
@@ -775,7 +775,7 @@ int32_t BSP_USBPD_PWR_VCONNDischargeOff(uint32_t PortNum)
 /** @addtogroup STM32U5XX_NUCLEO_USBPD_PWR_Private_Functions USBPD PWR Private Functions
   * @{
   */
-#ifdef YYYY
+#ifdef NUCLEO_BOARD	//YYYY
 static void MX_ADC1_Init(void)
 {
   static ADC_HandleTypeDef hadc1;

@@ -24,6 +24,11 @@
 #include "MEM_Pool.h"
 #include "cmd_dec.h"
 
+/** TODO
+ * a) UART1 on 1V8 does not work: even with OpenDrain it fails
+ * b) if UART1 has received anything (and echoed back) - the VCP UART hangs!
+ */
+
 /* Private includes ----------------------------------------------------------*/
 
 /* Private typedef -----------------------------------------------------------*/
@@ -77,6 +82,7 @@ int main(void)
 
   /* Configure the system clock */
   SystemClock_Config();
+  SystemCoreClockUpdate();
 
   /* Configure the System Power */
   SystemPower_Config();
@@ -141,8 +147,8 @@ void SystemClock_Config(void)
 #ifdef NUCLEO_BOARD
   //16 MHz XTAL, NUCLEO board
   RCC_OscInitStruct.PLL.PLLM = 1;
-  RCC_OscInitStruct.PLL.PLLN = 20;
-  RCC_OscInitStruct.PLL.PLLP = 10; //32 MHz needed here!
+  RCC_OscInitStruct.PLL.PLLN = 20;	//
+  RCC_OscInitStruct.PLL.PLLP = 10; 	//32 MHz needed here!
   RCC_OscInitStruct.PLL.PLLQ = 2;
   RCC_OscInitStruct.PLL.PLLR = 2;
   RCC_OscInitStruct.PLL.PLLRGE = RCC_PLLVCIRANGE_1;
@@ -150,9 +156,9 @@ void SystemClock_Config(void)
   //8 MHz OSC, my board
   RCC_OscInitStruct.PLL.PLLM = 1;	//2;  ==> THIS FAILS on USB
   RCC_OscInitStruct.PLL.PLLN = 40;	//20; ==> THIS FAILS on USB
-  RCC_OscInitStruct.PLL.PLLP = 10;
+  RCC_OscInitStruct.PLL.PLLP = 10;	//32 MHz, USB with PLL2_P_DIV2! (as 16 MHz)
   RCC_OscInitStruct.PLL.PLLQ = 2;
-  RCC_OscInitStruct.PLL.PLLR = 2;
+  RCC_OscInitStruct.PLL.PLLR = 2;	//should result in 160 MCU clock
   RCC_OscInitStruct.PLL.PLLRGE = RCC_PLLVCIRANGE_1;
 #endif
 
@@ -177,6 +183,8 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+
+  HAL_RCC_EnableCSS();
 }
 
 /**
@@ -329,7 +337,7 @@ void MX_OCTOSPI1_Init(void)
   hospi1.Init.DeviceSize = 32;
   hospi1.Init.ChipSelectHighTime = 1;
   hospi1.Init.FreeRunningClock = HAL_OSPI_FREERUNCLK_DISABLE;
-  hospi1.Init.ClockMode = gCFGparams.QSPImode;	//HAL_OSPI_CLOCK_MODE_0;
+  hospi1.Init.ClockMode = gCFGparams.QSPImode;
   hospi1.Init.WrapSize = HAL_OSPI_WRAP_NOT_SUPPORTED;
   hospi1.Init.ClockPrescaler = gCFGparams.QSPIdiv;
   if (gCFGparams.QSPIshift)
@@ -474,7 +482,7 @@ static void MX_UCPD1_Init(void)
 void MX_USART1_UART_Init(void)
 {
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 1843200;	//115200;
+  huart1.Init.BaudRate = 1843200;	//1843200;	//115200;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
