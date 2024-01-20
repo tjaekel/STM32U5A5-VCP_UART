@@ -16,9 +16,7 @@
   *
   ******************************************************************************
   */
-/* USER CODE END Header */
 
-/* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __MAIN_H
 #define __MAIN_H
 
@@ -26,7 +24,6 @@
 extern "C" {
 #endif
 
-/* Includes ------------------------------------------------------------------*/
 #include "stm32u5xx_hal.h"
 
 #include "stm32u5xx_ll_ucpd.h"
@@ -41,51 +38,24 @@ extern "C" {
 
 #include "stm32u5xx_ll_exti.h"
 
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
 #include "stm32u5xx_nucleo.h"
-/* USER CODE END Includes */
 
-/* Exported types ------------------------------------------------------------*/
-/* USER CODE BEGIN ET */
-
-/* USER CODE END ET */
-
-/* Exported constants --------------------------------------------------------*/
-/* USER CODE BEGIN EC */
-
-/* USER CODE END EC */
-
-/* Exported macro ------------------------------------------------------------*/
-/* USER CODE BEGIN EM */
-
-/* USER CODE END EM */
-
-/* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
 void MX_USART1_UART_Init(void);
 void MX_USB_OTG_HS_PCD_Init(void);
 
-/* USER CODE BEGIN EFP */
-
-/* USER CODE END EFP */
-
-/* Private defines -----------------------------------------------------------*/
 #define LED_RED_Pin GPIO_PIN_2
 #define LED_RED_GPIO_Port GPIOG
 
 #define CMD_LINE_LEN		(6*1024)			/* length of UART command line (ASCII based) */
 
-/* USER CODE BEGIN Private defines */
-#define VERSION_INFO		"V2.0"
+#define VERSION_INFO		"V2.1"
 #define VERSION_STRING		"---- QSPI MCU - " VERSION_INFO " ----\r\n"
 #ifdef NUCLEO_BOARD
 #define BOARD_INFO			"NUCLEO"
 #else
 #define	BOARD_INFO			"QSPI_MCU"
 #endif
-
-/* USER CODE END Private defines */
 
 #ifdef __cplusplus
 }

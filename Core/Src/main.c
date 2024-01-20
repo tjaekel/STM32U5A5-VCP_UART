@@ -23,21 +23,13 @@
 #include "SYS_Config.h"
 #include "MEM_Pool.h"
 #include "cmd_dec.h"
+#include "temp_sensor.h"
 
 /** TODO
  * a) UART1 on 1V8 does not work: even with OpenDrain it fails
  * b) if UART1 has received anything (and echoed back) - the VCP UART hangs!
  */
 
-/* Private includes ----------------------------------------------------------*/
-
-/* Private typedef -----------------------------------------------------------*/
-
-/* Private define ------------------------------------------------------------*/
-
-/* Private macro -------------------------------------------------------------*/
-
-/* Private variables ---------------------------------------------------------*/
 #if 0
 ADC_HandleTypeDef hadc1;
 #endif
@@ -50,7 +42,6 @@ DMA_HandleTypeDef handle_GPDMA1_Channel0;
 
 PCD_HandleTypeDef hpcd_USB_OTG_HS;
 
-/* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void SystemPower_Config(void);
 static void MX_GPIO_Init(void);
@@ -64,8 +55,6 @@ static void MX_UCPD1_Init(void);
 static void MX_ADC1_Init(void);
 #endif
 void MX_OCTOSPI1_Init(void);
-
-/* Private user code ---------------------------------------------------------*/
 
 /**
   * @brief  The application entry point.
@@ -123,15 +112,13 @@ void SystemClock_Config(void)
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-  /** Configure the main internal regulator output voltage
-  */
+  /** Configure the main internal regulator output voltage */
   if (HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1) != HAL_OK)
   {
     Error_Handler();
   }
 
-  /** Initializes the CPU, AHB and APB buses clocks
-  */
+  /** Initializes the CPU, AHB and APB buses clocks */
 
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_HSE;
 #ifdef NUCLEO_BOARD
@@ -168,8 +155,7 @@ void SystemClock_Config(void)
     Error_Handler();
   }
 
-  /** Initializes the CPU, AHB and APB buses clocks
-  */
+  /** Initializes the CPU, AHB and APB buses clocks */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2
                               |RCC_CLOCKTYPE_PCLK3;
@@ -519,7 +505,7 @@ void MX_USB_OTG_HS_PCD_Init(void)
 {
   hpcd_USB_OTG_HS.Instance = USB_OTG_HS;
   hpcd_USB_OTG_HS.Init.dev_endpoints = 9;
-  hpcd_USB_OTG_HS.Init.speed = PCD_SPEED_HIGH;	//PCD_SPEED_FULL;	//PCD_SPEED_HIGH_IN_FULL;	//PCD_SPEED_HIGH;			//XXXX
+  hpcd_USB_OTG_HS.Init.speed = PCD_SPEED_HIGH;
   hpcd_USB_OTG_HS.Init.phy_itface = USB_OTG_HS_EMBEDDED_PHY;
   hpcd_USB_OTG_HS.Init.Sof_enable = DISABLE;
   hpcd_USB_OTG_HS.Init.low_power_enable = DISABLE;
@@ -627,7 +613,6 @@ static void MX_GPIO_Init(void)
 #endif
 }
 
-/* USER CODE BEGIN 4 */
 void LED_Toggle(int dly)
 {
 	static int delayCnt = 0;

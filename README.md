@@ -50,3 +50,7 @@ When you are connected via USB VCP UART - use the command "help" in order to see
 
 The baudrate for VCP UART can be any baudrate (MCU runs anyway on USB, no need for baudrate, it it should be USB HS, 480 Mbps).
 
+## Added Features
+Use ADC1 to measure VCORE (VREF), VBAT and esp. Temperature of the chip.
+A fix in STM32NucleoU5 drivers was needed (USB has killed the ADC1 config and use).
+

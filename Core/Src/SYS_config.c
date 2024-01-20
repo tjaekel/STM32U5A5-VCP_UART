@@ -7,6 +7,7 @@
 
 #include "SYS_config.h"
 #include "MEM_Pool.h"
+#include "temp_sensor.h"
 #include <string.h>
 
 const tCFGparams defaultCFGparams = {
@@ -97,4 +98,10 @@ void SYSINFO_print(EResultOut out)
 	print_log(out, (const char *)"REV ID     : %08lx\r\n", *((long *)DBGMCU_BASE));
 	print_log(out, (const char *)"CPU Clock  : %ld\r\n", SystemCoreClock);
 	print_log(out, (const char *)"Board      : %s\r\n", BOARD_INFO);
+	print_log(out, (const char *)"UART       : ");
+	if (out == UART_OUT)
+		print_log(out, (const char *)"Debug UART\r\n");
+	else
+		print_log(out, (const char *)"USB VCP\r\n");
+	ADC_RunOnce(out, 1);
 }

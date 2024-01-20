@@ -13,6 +13,7 @@
 #include "syserr.h"
 #include "SYS_config.h"
 #include "QSPI.h"
+#include "temp_sensor.h"
 
 #include "app_azure_rtos.h"		/* for delay */
 
@@ -109,6 +110,8 @@ ECMD_DEC_Status CMD_qspideinit(TCMD_DEC_Results *res, EResultOut out);
 ECMD_DEC_Status CMD_qspiclk(TCMD_DEC_Results *res, EResultOut out);
 ECMD_DEC_Status CMD_cid(TCMD_DEC_Results *res, EResultOut out);
 
+ECMD_DEC_Status CMD_test(TCMD_DEC_Results *res, EResultOut out);
+
 const TCMD_DEC_Command Commands[] = {
 		{
 				.cmd = (const char *)"help",
@@ -176,6 +179,11 @@ const TCMD_DEC_Command Commands[] = {
 				.cmd = (const char *)"cid",
 				.help = (const char *)"read ChipID via QSPI",
 				.func = CMD_cid
+		},
+		{
+				.cmd = (const char *)"test",
+				.help = (const char *)"test command",
+				.func = CMD_test
 		},
 };
 
@@ -864,3 +872,7 @@ ECMD_DEC_Status CMD_cid(TCMD_DEC_Results *res, EResultOut out)
 	return CMD_DEC_OK;
 }
 
+ECMD_DEC_Status CMD_test(TCMD_DEC_Results *res, EResultOut out)
+{
+	return CMD_DEC_OK;
+}

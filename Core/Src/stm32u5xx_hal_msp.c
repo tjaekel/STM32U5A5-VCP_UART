@@ -16,25 +16,11 @@
   *
   ******************************************************************************
   */
-/* USER CODE END Header */
 
-/* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "SYS_config.h"
 
 extern DMA_HandleTypeDef handle_GPDMA1_Channel0;
-
-/* Private typedef -----------------------------------------------------------*/
-
-/* Private define ------------------------------------------------------------*/
-
-/* Private macro -------------------------------------------------------------*/
-
-/* Private variables ---------------------------------------------------------*/
-
-/* Private function prototypes -----------------------------------------------*/
-
-/* External functions --------------------------------------------------------*/
 
 /**
   * Initializes the Global MSP.
@@ -51,7 +37,7 @@ void HAL_MspInit(void)
 * @param hadc: ADC handle pointer
 * @retval None
 */
-#ifdef NUCLEO_BOARD		//YYYY
+#ifdef NUCLEO_BOARD_YYYY
 void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
